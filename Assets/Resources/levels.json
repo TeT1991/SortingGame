@@ -1,0 +1,26 @@
+{
+    "Levels": [
+        {
+            "HolderInfo": [
+                {
+                    "ItemsInfo": [
+                        { "Type": 1 },
+                        { "Type": 2 }
+                    ]
+                },
+                {
+                    "ItemsInfo": []
+                }
+            ]
+        },
+        {
+            "HolderInfo": [
+                {
+                    "ItemsInfo": [
+                        { "Type": 3 }
+                    ]
+                }
+            ]
+        }
+    ]
+}
