@@ -18,6 +18,8 @@ namespace NuclearDecline.Gameplay
         private int _minRows = 1;
         private int _maxRows = 2;
 
+        public int ItemsHolderOnSceneCount => _itemsHoldersOnScene.Count;
+
         public Action LevelCreated;
 
         public void Init(LevelsStorage levelStorage)
@@ -92,6 +94,12 @@ namespace NuclearDecline.Gameplay
             }
 
             _itemsHoldersOnScene.Clear();
+        }
+
+        public ItemsHolder GetItemsHolder(int index)
+        {
+            Debug.Log("GetItemHolder");
+            return _itemsHoldersOnScene[index];
         }
     }
 }

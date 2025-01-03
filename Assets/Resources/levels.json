@@ -21,6 +21,22 @@
                     ]
                 }
             ]
+        },
+        {
+            "HolderInfo": [
+                {
+                    "ItemsInfo": [
+                        { "Type": 1 },
+                        { "Type": 1 },
+                        { "Type": 1 }
+                    ]
+                },
+                {
+                    "ItemsInfo": [
+                        { "Type": 1 }
+                    ]
+                }
+            ]
         }
     ]
 }

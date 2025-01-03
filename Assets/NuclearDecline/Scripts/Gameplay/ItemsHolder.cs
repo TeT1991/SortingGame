@@ -14,6 +14,7 @@ namespace NuclearDecline.Gameplay
 
         private ItemsHolderStatusSwitcher _statusSwitcher;
 
+        private bool _isComplete;
 
         private int _itemsMaxCount = 4;
 
@@ -31,6 +32,27 @@ namespace NuclearDecline.Gameplay
         {
             _statusSwitcher = new ItemsHolderStatusSwitcher();
             _statusSwitcher.OnStatusChanged += _itemsHolderVizualization.ShowGlow;
+        }
+
+        private void OnMouseDown()
+        {
+            OnClick?.Invoke(this);
+        }
+
+        private void OnMouseEnter()
+        {
+            if (_statusSwitcher.Status == HolderStatus.NotSelected)
+            {
+                _statusSwitcher.SetStatus(HolderStatus.MouseOn);
+            }
+        }
+
+        private void OnMouseExit()
+        {
+            if (_statusSwitcher.Status == HolderStatus.MouseOn)
+            {
+                _statusSwitcher.SetStatus(HolderStatus.NotSelected);
+            }
         }
 
         public bool TryGetItem(out Item item)
@@ -87,24 +109,26 @@ namespace NuclearDecline.Gameplay
             _statusSwitcher.SetStatus(status);
         }
 
-        private void OnMouseDown()
+        public void TrySetCompleted()
         {
-            OnClick?.Invoke(this);
-        }
+            Debug.Log(IsFull);
 
-        private void OnMouseEnter()
-        {
-            if (_statusSwitcher.Status == HolderStatus.NotSelected)
+            if (IsFull)
             {
-                _statusSwitcher.SetStatus(HolderStatus.MouseOn);
-            }
-        }
+                _isComplete = true;
 
-        private void OnMouseExit()
-        {
-            if (_statusSwitcher.Status == HolderStatus.MouseOn)
-            {
-                _statusSwitcher.SetStatus(HolderStatus.NotSelected);
+                for (int i = 0; i < _items.Count - 1; i++)
+                {
+                    Debug.Log(i);
+                    if (_items[i].Type != _items[i + 1].Type)
+                    {
+                        _isComplete = false;
+                        return;
+                    }
+                }
+
+                Collider2D collider = GetComponent<Collider2D>();
+                collider.enabled = false;
             }
         }
     }

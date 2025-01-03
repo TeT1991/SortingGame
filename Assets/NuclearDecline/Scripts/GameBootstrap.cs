@@ -9,8 +9,10 @@ namespace NuclearDecline.Bootstraps
     public class GameBootstrap : Bootstrap
     {
         [SerializeField] private LevelCreator _levelCreator;
-        [SerializeField] private ItemsHolderSelecor _itemsHolderSelcetor;
+        [SerializeField] private ItemsHolderSelector _itemsHolderSelcetor;
         [SerializeField] private SelectLevelPanel _selectLevelPanel;
+        [SerializeField] private LevelProgress _levelProgress;
+        [SerializeField] private ItemTransfer _itemTransfer;
 
         private JSONLevelAdapter _jsonLevelAdapter;
 
@@ -35,6 +37,10 @@ namespace NuclearDecline.Bootstraps
             _levelCreator.Init(levelStorage);
             _itemsHolderSelcetor.Init();
             _levelCreator.LevelCreated += _itemsHolderSelcetor.Init;
+            _levelCreator.LevelCreated += SetLevelProgress;
+
+            _itemTransfer.TransferFinished += _itemsHolderSelcetor.AllowActions;
+            _itemTransfer.TransferFinished += _levelProgress.TryFinishLevel;
         }
 
         private void CreateGameInstance()
@@ -44,6 +50,14 @@ namespace NuclearDecline.Bootstraps
             tempObj.AddComponent<GameInstance>();
             GameInstance = tempObj.GetComponent<GameInstance>();
             GameInstance.Init(this);
+        }
+
+        private void SetLevelProgress()
+        {
+            for (int i = 0; i < _levelCreator.ItemsHolderOnSceneCount; i++)
+            {
+                _levelProgress.AddItemsHolder(_levelCreator.GetItemsHolder(i));
+            }
         }
     }
 }

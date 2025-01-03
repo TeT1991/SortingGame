@@ -5,8 +5,7 @@ using UnityEngine;
 
 namespace NuclearDecline.Gameplay
 {
-    [RequireComponent(typeof(ItemTransfer))]
-    public class ItemsHolderSelecor : MonoBehaviour
+    public class ItemsHolderSelector : MonoBehaviour
     {
         [SerializeField] private List<ItemsHolder> _itemHolders = new List<ItemsHolder>();
         [SerializeField]private ItemTransfer _transfer;
@@ -24,8 +23,11 @@ namespace NuclearDecline.Gameplay
             {
                 holder.OnClick += TryGetHolder;
             }
+        }
 
-            _transfer.TransferFinished += AllowActions;
+        public void AllowActions()
+        {
+            _isAviable = true;
         }
 
         private void TryGetHolder(ItemsHolder itemsHolder)
@@ -54,7 +56,7 @@ namespace NuclearDecline.Gameplay
                 if (_itemHolders[firstId].IsEmpty)
                 {
                     Debug.Log("НЕ ВЫБРАНО, ПЕрвый пустой");
-                    StartCoroutine(ResetSelection());
+                    StartCoroutine(ResetSelection(0));
                     SetSelectedHoldersStatus(HolderStatus.Wrong);
                     return false;
                 }
@@ -63,16 +65,16 @@ namespace NuclearDecline.Gameplay
             {
                 if (_itemHolders[firstId] == _itemHolders[secondId])
                 {
-                    Debug.Log("НЕ ВЫБРАНО, Нельзя выбирать одинаковые");
-                    StartCoroutine(ResetSelection());
-                    SetSelectedHoldersStatus(HolderStatus.Wrong);
+                    Debug.Log("Выделение снято");
+                    StartCoroutine(ResetSelection(0));
+                    SetSelectedHoldersStatus(HolderStatus.NotSelected);
                     return false;
                 }
 
                 if (_itemHolders[secondId].IsFull)
                 {
                     Debug.Log("НЕ ВЫБРАНО, Второй полный");
-                    StartCoroutine(ResetSelection());
+                    StartCoroutine(ResetSelection(0));
                     SetSelectedHoldersStatus(HolderStatus.Wrong);
                     return false;
                 }
@@ -80,7 +82,7 @@ namespace NuclearDecline.Gameplay
                 if(_itemHolders[secondId].ItemsCount != 0 &&_itemHolders[firstId].GetItem().Type != _itemHolders[secondId].GetItem().Type)
                 {
                     Debug.Log("НЕ ВЫБРАНО, Неподходящий тип");
-                    StartCoroutine(ResetSelection());
+                    StartCoroutine(ResetSelection(0));
                     SetSelectedHoldersStatus(HolderStatus.Wrong);
                     return false;
                 }
@@ -88,7 +90,7 @@ namespace NuclearDecline.Gameplay
                 SetSelectedHoldersStatus(HolderStatus.Correct);
                 HoldersSelected?.Invoke(GetListCopy());
                 _transfer.Transfer(GetListCopy());
-                StartCoroutine(ResetSelection());
+                StartCoroutine(ResetSelection(1));
                 DenyActions();
                 Debug.Log("ВЫБРАНО");
                 return true;
@@ -117,17 +119,14 @@ namespace NuclearDecline.Gameplay
             }
         }
 
-        private IEnumerator ResetSelection()
+        private IEnumerator ResetSelection(int time)
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(time);
             SetSelectedHoldersStatus(HolderStatus.NotSelected);
             _itemHolders.Clear();
         }
 
-        private void AllowActions()
-        {
-            _isAviable = true;
-        }
+
 
         private void DenyActions()
         {
