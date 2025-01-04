@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace NuclearDecline.Gameplay
 {
@@ -20,6 +19,8 @@ namespace NuclearDecline.Gameplay
 
         public bool IsEmpty => _items.Count <= 0;
         public bool IsFull => _items.Count == _itemsMaxCount;
+
+        public bool IsComplete => _isComplete;
 
         public int ItemsMaxCount => _itemsMaxCount;
         public int ItemsCount => _items.Count;
@@ -63,11 +64,9 @@ namespace NuclearDecline.Gameplay
             {
                 int id = _items.Count - 1;
                 item = _items[id];
-                Debug.Log("GET ITEM");
                 return true;
             }
 
-            Debug.Log("CANT GET ITEM");
             return false;
         }
 
@@ -109,27 +108,27 @@ namespace NuclearDecline.Gameplay
             _statusSwitcher.SetStatus(status);
         }
 
-        public void TrySetCompleted()
+        public bool TrySetCompleted()
         {
-            Debug.Log(IsFull);
-
             if (IsFull)
             {
                 _isComplete = true;
 
                 for (int i = 0; i < _items.Count - 1; i++)
                 {
-                    Debug.Log(i);
                     if (_items[i].Type != _items[i + 1].Type)
                     {
                         _isComplete = false;
-                        return;
+                        return false;
                     }
                 }
 
                 Collider2D collider = GetComponent<Collider2D>();
                 collider.enabled = false;
+                return true;
             }
+
+            return false;
         }
     }
 

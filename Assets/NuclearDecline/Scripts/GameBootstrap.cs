@@ -2,15 +2,16 @@ using NuclearDecline.FSM;
 using NuclearDecline.Gameplay;
 using NuclearDecline.UI;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace NuclearDecline.Bootstraps
 {
     public class GameBootstrap : Bootstrap
     {
-        [SerializeField] private LevelCreator _levelCreator;
-        [SerializeField] private ItemsHolderSelector _itemsHolderSelcetor;
         [SerializeField] private SelectLevelPanel _selectLevelPanel;
+        [SerializeField] private EndLevelPanel _endLevelPanel;
+        [SerializeField] private UIButton _nextLevelButton;
+
+        [SerializeField] private ItemsHolderSelector _itemsHolderSelcetor;
         [SerializeField] private LevelProgress _levelProgress;
         [SerializeField] private ItemTransfer _itemTransfer;
 
@@ -31,16 +32,21 @@ namespace NuclearDecline.Bootstraps
 
             for (int i = 0; i < _selectLevelPanel.ButtonsCount; i++)
             {
-                _selectLevelPanel.GetLevelButton(i).OnClick += _levelCreator.CreateLevel;
+                _selectLevelPanel.GetLevelButton(i).OnClick += _levelProgress.SetCurrentLevel;
+                _selectLevelPanel.GetLevelButton(i).OnClick += (value) => _levelProgress.CreateLevel();
             }
 
-            _levelCreator.Init(levelStorage);
-            _itemsHolderSelcetor.Init();
-            _levelCreator.LevelCreated += _itemsHolderSelcetor.Init;
-            _levelCreator.LevelCreated += SetLevelProgress;
+            _levelProgress.Init(levelStorage);
+
+            _levelProgress.LevelCreated += _itemsHolderSelcetor.Init;
 
             _itemTransfer.TransferFinished += _itemsHolderSelcetor.AllowActions;
             _itemTransfer.TransferFinished += _levelProgress.TryFinishLevel;
+
+            _levelProgress.LevelFinished += _endLevelPanel.Show;
+
+            _endLevelPanel.NextLevelButton.OnClick += () => _levelProgress.SetCurrentLevel(_levelProgress.CurrentLevel + 1);
+            _endLevelPanel.NextLevelButton.OnClick +=_levelProgress.CreateLevel;
         }
 
         private void CreateGameInstance()
@@ -50,14 +56,6 @@ namespace NuclearDecline.Bootstraps
             tempObj.AddComponent<GameInstance>();
             GameInstance = tempObj.GetComponent<GameInstance>();
             GameInstance.Init(this);
-        }
-
-        private void SetLevelProgress()
-        {
-            for (int i = 0; i < _levelCreator.ItemsHolderOnSceneCount; i++)
-            {
-                _levelProgress.AddItemsHolder(_levelCreator.GetItemsHolder(i));
-            }
         }
     }
 }

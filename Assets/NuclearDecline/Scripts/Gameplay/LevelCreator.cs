@@ -20,8 +20,6 @@ namespace NuclearDecline.Gameplay
 
         public int ItemsHolderOnSceneCount => _itemsHoldersOnScene.Count;
 
-        public Action LevelCreated;
-
         public void Init(LevelsStorage levelStorage)
         {
             _levelsStorage = levelStorage;
@@ -33,7 +31,6 @@ namespace NuclearDecline.Gameplay
             int holdersCount = holders.Length;
 
             CreateItemsHolders(holdersCount, holders);
-            LevelCreated?.Invoke();
         }
 
         //Много ответсвенностей. Нужно подумать как разделить этот метод

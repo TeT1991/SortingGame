@@ -5,11 +5,14 @@
                 {
                     "ItemsInfo": [
                         { "Type": 1 },
-                        { "Type": 2 }
+                        { "Type": 1 },
+                        { "Type": 1 }
                     ]
                 },
                 {
-                    "ItemsInfo": []
+                    "ItemsInfo": [
+                        { "Type": 1 }
+                    ]
                 }
             ]
         },
@@ -17,7 +20,14 @@
             "HolderInfo": [
                 {
                     "ItemsInfo": [
-                        { "Type": 3 }
+                        { "Type": 2 },
+                        { "Type": 2 },
+                        { "Type": 2 }
+                    ]
+                },
+                {
+                    "ItemsInfo": [
+                        { "Type": 2 }
                     ]
                 }
             ]

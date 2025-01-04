@@ -1,26 +1,27 @@
-using NuclearDecline.UI;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-
-public class MainMenuPanel : UIPanel
+namespace NuclearDecline.UI
 {
-    [SerializeField] private UIButton[] _buttons;
-
-    protected override void Subscribe()
+    public class MainMenuPanel : UIPanel
     {
-        foreach (var button in _buttons)
+        [SerializeField] private UIButton[] _buttons;
+
+        protected override void Subscribe()
         {
-            button.OnClick += Hide;
+            foreach (var button in _buttons)
+            {
+                button.OnClick += Hide;
+            }
+        }
+
+        protected override void UnSubscribe()
+        {
+            foreach (var button in _buttons)
+            {
+                button.OnClick -= Hide;
+            }
         }
     }
 
-    protected override void UnSubscribe()
-    {
-        foreach (var button in _buttons)
-        {
-            button.OnClick -= Hide;
-        }
-    }
 }
+
